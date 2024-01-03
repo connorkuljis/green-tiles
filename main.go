@@ -10,7 +10,7 @@ import (
 	"text/template"
 )
 
-var server = true
+var server = false
 
 // Server encapsulates all dependencies for the web server.
 // HTTP handlers access information via receiver types.
@@ -46,7 +46,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		takeScreenshot("connorkuljis")
+		takeScreenshot("connorkuljis", Double, 0)
 	}
 }
 
@@ -110,7 +110,7 @@ func (s *Server) handleGenerate() http.HandlerFunc {
 
 		fmt.Println(username)
 
-		filename := takeScreenshot(username)
+		filename := takeScreenshot(username, Double, 0)
 
 		data := PageData{Username: username, Filename: filename}
 
