@@ -1,0 +1,97 @@
+{{ define "hero" }}
+<div>
+
+	<section class="util-section hero-section">
+
+		<div class="util-container">
+
+			<div class="hero-block">
+
+				<div class="title">
+					A tool to screenshot your github contributions
+				</div>
+
+				<div class="subtitle">
+					Enter your github username.
+				</div>
+
+				<form hx-post="/generate" hx-target="#result" hx-trigger="submit" hx-indicator="#spinner">
+
+					<input name="username" type="text" placeholder='Enter github username' />
+
+					<div>
+
+						<button type="submit" class="util-btn">
+							Go
+						</button>
+
+						<img id="spinner" class="htmx-indicator" src="/static/blocks-scale.svg" />
+
+					</div>
+
+				</form>
+
+			</div>
+
+			<div id="result">
+			</div>
+
+		</div>
+
+	</section>
+
+	<style>
+		this form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		this .htmx-indicator {
+			opacity: 0;
+			transition: opacity 500ms ease-in;
+		}
+
+		this .htmx-request .htmx-indicator {
+			opacity: 1
+		}
+
+		this .htmx-request.htmx-indicator {
+			opacity: 1
+		}
+
+		this .hero-section {
+
+			position: relative;
+			display: flex;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+		}
+
+		this .hero-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+		}
+
+		this .title {
+			font-size: 3.75rem;
+		}
+
+		this .subtitle {
+			font-size: 2rem;
+		}
+
+
+		@media only screen and (max-width: 600px) {
+			this .title {
+				font-size: 2rem;
+			}
+
+			this .subtitle {
+				font-size: 1.5rem;
+			}
+		}
+	</style>
+
+</div>
+
+{{ end }}
