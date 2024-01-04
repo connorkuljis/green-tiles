@@ -55,23 +55,28 @@
 
 					</label>
 
-					<label>
+					<div>
 
-						<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
+						<label>
 
-						Custom (if you have a bio)
+							<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
 
-					</label>
+							Custom (if you have a bio)
+
+						</label>
+
+						<details>
+
+							<summary>Custom Offset Amount</summary>
+
+							<input type="number" name="offset" value="{{ .Offset }}">
+
+						</details>
+
+					</div>
 
 				</div>
 
-				<details>
-
-					<summary>Custom Offset Amount</summary>
-
-					<input type="number" name="offset" value="{{ .Offset }}">
-
-				</details>
 
 			</fieldset>
 
@@ -139,7 +144,6 @@
 
 	this .options {
 		display: flex;
-		flex-direction: column;
 		justify-content: space-between;
 	}
 
