@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"image"
 	"image/draw"
@@ -18,9 +19,9 @@ const (
 )
 
 const (
-	Default = iota
-	Single
+	Single = iota
 	Double
+	Triple
 	Custom
 )
 
@@ -48,7 +49,7 @@ func githubUrlStringToFilename(str string) string {
 func execGowitness(siteURL string) error {
 	// TODO: validate url
 
-	cmd := exec.Command("gowitness", "single", siteURL)
+	cmd := exec.Command("gowitness", "single", "--fullpage", siteURL)
 	err := cmd.Run()
 	if err != nil {
 		return err
@@ -68,15 +69,15 @@ type Screenshot struct {
 	Directory string
 }
 
-func takeScreenshot(username string, option int, userYOffset int) string {
+func TakeScreenshot(username string, option int, userYOffset int) (string, error) {
 	var inY int
 	switch option {
-	case Default:
+	case Triple:
 		inY = 1270
-	case Single:
-		inY = 700
 	case Double:
 		inY = 970
+	case Single:
+		inY = 700
 	case Custom:
 		inY = userYOffset
 	}
@@ -94,19 +95,22 @@ func takeScreenshot(username string, option int, userYOffset int) string {
 	err := execGowitness(s.GithubUrl)
 	if err != nil {
 		log.Println(err)
+		return "", errors.New("An internal error occurred attempting screenshot.")
 	}
 
 	// Open the resulting PNG image
 	file, err := os.Open(filepath.Join(s.Directory, s.Filename))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return "", errors.New("Error opening file.")
 	}
 	defer file.Close()
 
 	// Decode the PNG image
 	img, _, err := image.Decode(file)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return "", err
 	}
 
 	maxHeight := img.Bounds().Dy()
@@ -116,7 +120,7 @@ func takeScreenshot(username string, option int, userYOffset int) string {
 	// Create a new RGBA image with the calculated dimensions
 	padding := 40
 	contributionGraphWidth := 1800 + padding
-	contributionGraphHeight := 425 + padding
+	contributionGraphHeight := 930 + padding
 	croppedImage := image.NewRGBA(image.Rect(0, 0, contributionGraphWidth, contributionGraphHeight))
 
 	// Draw into the contribution graph image based on offset
@@ -128,18 +132,20 @@ func takeScreenshot(username string, option int, userYOffset int) string {
 	timestamp := time.Now().Format("2006-01-02")
 
 	// Save the cropped image to a new PNG file
-	outFile := filepath.Join(s.Directory, username+"_"+timestamp+".png")
+	outFile := filepath.Join(s.Directory, username+"_"+timestamp+"_"+fmt.Sprintf("%dpx", yOffset)+".png")
 	outputFile, err := os.Create(outFile)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return "", err
 	}
 	defer outputFile.Close()
 
 	err = png.Encode(outputFile, croppedImage)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return "", err
 	}
 
-	fmt.Println(outFile)
-	return outFile
+	log.Println("Saved cropped file to: " + outFile)
+	return outFile, nil
 }

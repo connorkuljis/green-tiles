@@ -12,85 +12,152 @@
 				</div>
 
 				<div class="subtitle">
-					Enter your github username.
+					1. Enter your github username.
 				</div>
 
 				<form hx-post="/generate" hx-target="#result" hx-trigger="submit" hx-indicator="#spinner">
 
-					<input name="username" type="text" placeholder='Enter github username' />
+					<input name="username" type="text" placeholder='Enter github username' value="{{ .Username }}""/>
 
-					<div>
+					<div class=" subtitle">
+					2. Select an option.
+			</div>
 
-						<button type="submit" class="util-btn">
-							Go
-						</button>
+			<fieldset class="fieldset">
 
-						<img id="spinner" class="htmx-indicator" src="/static/blocks-scale.svg" />
+				<script>
 
-					</div>
+				</script>
 
-				</form>
+				<div class="options">
+
+					<label>
+
+						<input type="radio" name="option" value="0" {{ if eq .Option "0" }} checked {{ end }}>
+
+						Single <p>(700px from the top of the page)</p>
+
+					</label>
+
+					<label>
+
+						<input type="radio" name="option" value="1" {{ if eq .Option "1" }} checked {{ end }}>
+
+						Double <p>(970px from the top of the page)</p>
+
+					</label>
+
+					<label>
+
+						<input type="radio" name="option" value="2" {{ if eq .Option "2" }} checked {{ end }}>
+
+						Triple <p>(1270px from the top of the page)</p>
+
+					</label>
+
+					<label>
+
+						<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
+
+						Custom (if you have a bio)
+
+					</label>
+
+				</div>
+
+				<details>
+
+					<summary>Custom Offset Amount</summary>
+
+					<input type="number" name="offset" value="{{ .Offset }}">
+
+				</details>
+
+			</fieldset>
+
+			<div>
+
+				<button type="submit" class="util-btn">
+					Go
+				</button>
+
+				<img id="spinner" class="htmx-indicator" src="/static/blocks-scale.svg" />
 
 			</div>
 
-			<div id="result">
-			</div>
+			</form>
 
 		</div>
 
-	</section>
+		<div id="result">
+		</div>
 
-	<style>
-		this form {
-			display: flex;
-			flex-direction: column;
-		}
+</div>
 
-		this .htmx-indicator {
-			opacity: 0;
-			transition: opacity 500ms ease-in;
-		}
+</section>
 
-		this .htmx-request .htmx-indicator {
-			opacity: 1
-		}
+<style>
+	this form {
+		display: flex;
+		gap: 0.75rem;
+		flex-direction: column;
+	}
 
-		this .htmx-request.htmx-indicator {
-			opacity: 1
-		}
+	this .htmx-indicator {
+		opacity: 0;
+		transition: opacity 500ms ease-in;
+	}
 
-		this .hero-section {
+	this .htmx-request .htmx-indicator {
+		opacity: 1
+	}
 
-			position: relative;
-			display: flex;
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
-		}
+	this .htmx-request.htmx-indicator {
+		opacity: 1
+	}
 
-		this .hero-block {
-			display: flex;
-			flex-direction: column;
-			gap: 2rem;
-		}
+	this .hero-section {
 
+		position: relative;
+		display: flex;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+	}
+
+	this .hero-block {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	this .title {
+		font-size: 3.75rem;
+	}
+
+	this .subtitle {
+		font-size: 2rem;
+	}
+
+	this .options {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	this .fieldset {
+		border: none;
+		padding: 0.25rem;
+	}
+
+	@media only screen and (max-width: 600px) {
 		this .title {
-			font-size: 3.75rem;
-		}
-
-		this .subtitle {
 			font-size: 2rem;
 		}
 
-
-		@media only screen and (max-width: 600px) {
-			this .title {
-				font-size: 2rem;
-			}
-
-			this .subtitle {
-				font-size: 1.5rem;
-			}
+		this .subtitle {
+			font-size: 1.5rem;
 		}
-	</style>
+	}
+</style>
 
 </div>
 

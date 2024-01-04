@@ -2,15 +2,18 @@ package main
 
 import (
 	"embed"
-	"fmt"
+	"github.com/gorilla/sessions"
 	"io/fs"
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"text/template"
 )
 
-var server = false
+var server = true
+
+const SessionName = "session"
 
 // Server encapsulates all dependencies for the web server.
 // HTTP handlers access information via receiver types.
@@ -20,6 +23,7 @@ type Server struct {
 	TemplatesDir string // location of html templates, makes template parsing less verbose.
 	StaticDir    string // location of static assets
 	FileSystem   fs.FS  // in-memory or disk
+	Sessions     *sessions.CookieStore
 }
 
 //go:embed templates/* static/*
@@ -29,6 +33,8 @@ func main() {
 	if server {
 		port := "8080"
 
+		store := sessions.NewCookieStore([]byte("special_key"))
+
 		log.Println("[ 💿 Spinning up server on http://localhost:" + port + " ]")
 
 		s := Server{
@@ -37,6 +43,7 @@ func main() {
 			TemplatesDir: "templates",
 			StaticDir:    "static",
 			FileSystem:   inMemoryFS,
+			Sessions:     store,
 		}
 
 		s.routes()
@@ -46,7 +53,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		takeScreenshot("connorkuljis", Double, 0)
+		TakeScreenshot("connorkuljis", Double, 0)
 	}
 }
 
@@ -73,6 +80,12 @@ func (s *Server) routes() {
 }
 
 func (s *Server) handleIndex() http.HandlerFunc {
+	type PageData struct {
+		Username string
+		Option   string
+		Offset   string
+	}
+
 	indexHTML := []string{
 		"root.html",
 		"head.html",
@@ -84,7 +97,26 @@ func (s *Server) handleIndex() http.HandlerFunc {
 	tmpl := compileTemplates(s, indexHTML)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		tmpl.ExecuteTemplate(w, "root", nil)
+		session, _ := s.Sessions.Get(r, SessionName)
+
+		var pageData PageData
+
+		switch val := session.Values["username"].(type) {
+		case string:
+			pageData.Username = val
+		}
+
+		switch val := session.Values["option"].(type) {
+		case string:
+			pageData.Option = val
+		}
+
+		switch val := session.Values["offset"].(type) {
+		case string:
+			pageData.Offset = val
+		}
+
+		tmpl.ExecuteTemplate(w, "root", pageData)
 	}
 }
 
@@ -93,6 +125,13 @@ func (s *Server) handleGenerate() http.HandlerFunc {
 		Username string
 		Filename string
 	}
+
+	type FormData struct {
+		username string
+		option   int
+		offset   int
+	}
+
 	generateHTMLPartial := []string{
 		"partials/contribution.html",
 	}
@@ -100,19 +139,43 @@ func (s *Server) handleGenerate() http.HandlerFunc {
 	tmpl := compileTemplates(s, generateHTMLPartial)
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		session, _ := s.Sessions.Get(r, SessionName)
+
 		r.ParseForm()
 
 		username := r.Form.Get("username")
+		optionStr := r.Form.Get("option")
+		offsetStr := r.Form.Get("offset")
 
 		if username == "" {
-			log.Fatal("empty username")
+			log.Println("empty username")
 		}
 
-		fmt.Println(username)
+		option, err := strconv.Atoi(optionStr)
+		if err != nil {
+			log.Printf("Unable to convert option: %s to int\n", optionStr)
+		}
 
-		filename := takeScreenshot(username, Double, 0)
+		offset, err := strconv.Atoi(offsetStr)
+		if err != nil {
+			log.Printf("Unable to convert offset: %s to int\n", offsetStr)
+		}
 
-		data := PageData{Username: username, Filename: filename}
+		session.Values["username"] = username
+		session.Values["option"] = optionStr
+		session.Values["offset"] = offsetStr
+		session.Save(r, w)
+
+		formData := FormData{username: username, option: option, offset: offset}
+
+		log.Println("FormData: ", formData)
+
+		imgName, err := TakeScreenshot(formData.username, formData.option, formData.offset)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		data := PageData{Username: username, Filename: imgName}
 
 		tmpl.ExecuteTemplate(w, "contribution", data)
 	}
