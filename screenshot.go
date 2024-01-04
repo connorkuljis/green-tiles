@@ -120,7 +120,7 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 	// Create a new RGBA image with the calculated dimensions
 	padding := 40
 	contributionGraphWidth := 1800 + padding
-	contributionGraphHeight := 930 + padding
+	contributionGraphHeight := 425 + padding
 	croppedImage := image.NewRGBA(image.Rect(0, 0, contributionGraphWidth, contributionGraphHeight))
 
 	// Draw into the contribution graph image based on offset
