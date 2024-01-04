@@ -53,7 +53,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		TakeScreenshot("connorkuljis", Double, 0)
+		TakeScreenshot("connorkuljis", Single, 0)
 	}
 }
 
