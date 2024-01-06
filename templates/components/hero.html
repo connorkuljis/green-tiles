@@ -17,170 +17,177 @@
 
 				<form hx-post="/generate" hx-target="#result" hx-trigger="submit" hx-indicator="#spinner">
 
-					<input name="username" type="text" placeholder='Enter github username' value="{{ .Username }}""/>
+					<input name="username" type="text" placeholder='Enter github username' value="{{ .Username }}" />
 
-					<div class=" subtitle">
-					2. Select an option.
-			</div>
+					<div class="subtitle">
+						2. Select an option.
+					</div>
 
-			<fieldset class="fieldset">
+					<details>
+						<summary>What option should I chose?</summary>
+						<p>a) Visit your github profile. </p>
+						<p>• If your profile has <em>6 or less pinned</em> repositories -> chose option 'triple' (3 rows).</p>
+						<p>• If your profile has <em>4 or less pinned</em> repositories -> chose option 'double' (2 rows).</p>
+						<p>• If your profile has <em>2 or less pinned</em> repositories -> chose option 'double' (1 row).</p>
+						<p>Otherwise you can set a custom y-offset (0px respresents the top of page).</p>
+						<br>
+						<p><em>✨ This tool will save your options, so you only have to input data <strong>once</strong>.</em></p>
+					</details>
 
-				<script>
+					<fieldset class="fieldset">
 
-				</script>
+						<div class="options">
 
-				<div class="options">
+							<div class="card">
+
+								<label>
+
+									<input type="radio" name="option" value="0" {{ if eq .Option "0" }} checked {{ end }}>
+
+									Single <p>(360px from the top of the page)</p>
+
+								</label>
+
+							</div>
+
+							<div class="card">
+
+								<label>
+
+									<input type="radio" name="option" value="1" {{ if eq .Option "1" }} checked {{ end }}>
+
+									Double <p>(480px from the top of the page)</p>
+
+								</label>
+
+							</div>
+
+							<div class="card">
+
+								<label>
+
+									<input type="radio" name="option" value="2" {{ if eq .Option "2" }} checked {{ end }}>
+
+									Triple <p>(600px from the top of the page)</p>
+
+								</label>
+
+							</div>
+
+						</div>
+
+					</fieldset>
 
 					<div class="card">
 
 						<label>
 
-							<input type="radio" name="option" value="0" {{ if eq .Option "0" }} checked {{ end }}>
+							<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
 
-							Single <p>(700px from the top of the page)</p>
+							Custom (if you have a bio)
 
 						</label>
-
-					</div>
-
-					<div class="card">
 
 						<label>
 
-							<input type="radio" name="option" value="1" {{ if eq .Option "1" }} checked {{ end }}>
+							<input type="number" name="offset" value="{{ .Offset }}">
 
-							Double <p>(970px from the top of the page)</p>
-
-						</label>
-
-					</div>
-
-					<div class="card">
-
-						<label>
-
-							<input type="radio" name="option" value="2" {{ if eq .Option "2" }} checked {{ end }}>
-
-							Triple <p>(1270px from the top of the page)</p>
+							px from the top of the page
 
 						</label>
 
 					</div>
 
-				</div>
+					<div>
 
-			</fieldset>
+						<button type="submit" class="util-btn">
+							Go
+						</button>
 
-			<div class="card">
+						<img id="spinner" class="htmx-indicator" src="/static/blocks-scale.svg" />
 
-				<label>
+					</div>
 
-					<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
-
-					Custom (if you have a bio)
-
-				</label>
-
-				<details>
-
-					<summary>Custom Offset Amount</summary>
-
-					<input type="number" name="offset" value="{{ .Offset }}">
-
-				</details>
+				</form>
 
 			</div>
 
-			<div>
-
-				<button type="submit" class="util-btn">
-					Go
-				</button>
-
-				<img id="spinner" class="htmx-indicator" src="/static/blocks-scale.svg" />
-
+			<div id="result">
 			</div>
-
-			</form>
 
 		</div>
 
-		<div id="result">
-		</div>
+	</section>
 
-</div>
+	<style>
+		this form {
+			display: flex;
+			gap: 0.75rem;
+			flex-direction: column;
+		}
 
-</section>
+		this .htmx-indicator {
+			opacity: 0;
+			transition: opacity 500ms ease-in;
+		}
 
-<style>
-	this form {
-		display: flex;
-		gap: 0.75rem;
-		flex-direction: column;
-	}
+		this .htmx-request .htmx-indicator {
+			opacity: 1
+		}
 
-	this .htmx-indicator {
-		opacity: 0;
-		transition: opacity 500ms ease-in;
-	}
+		this .htmx-request.htmx-indicator {
+			opacity: 1
+		}
 
-	this .htmx-request .htmx-indicator {
-		opacity: 1
-	}
+		this .hero-section {
+			min-height: 100dvh;
+			position: relative;
+			display: flex;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+		}
 
-	this .htmx-request.htmx-indicator {
-		opacity: 1
-	}
+		this .hero-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+		}
 
-	this .hero-section {
-		min-height: 100dvh;
-		position: relative;
-		display: flex;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
-	}
-
-	this .hero-block {
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-	}
-
-	this .title {
-		font-size: 3.75rem;
-	}
-
-	this .subtitle {
-		font-size: 2rem;
-	}
-
-	this .options {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	this .card {
-		padding: 1rem;
-		background-color: white;
-		border: 1px solid black;
-		border-radius: 1rem;
-
-	}
-
-	this .fieldset {
-		border: none;
-		padding: 0.25rem;
-	}
-
-	@media only screen and (max-width: 600px) {
 		this .title {
-			font-size: 2rem;
+			font-size: 3.75rem;
 		}
 
 		this .subtitle {
-			font-size: 1.5rem;
+			font-size: 2rem;
 		}
-	}
-</style>
+
+		this .options {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		this .card {
+			padding: 1rem;
+			background-color: white;
+			border: 1px solid black;
+			border-radius: 1rem;
+
+		}
+
+		this .fieldset {
+			border: none;
+			padding: 0.25rem;
+		}
+
+		@media only screen and (max-width: 600px) {
+			this .title {
+				font-size: 2rem;
+			}
+
+			this .subtitle {
+				font-size: 1.5rem;
+			}
+		}
+	</style>
 
 </div>
 
