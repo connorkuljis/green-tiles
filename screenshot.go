@@ -49,11 +49,20 @@ func githubUrlStringToFilename(str string) string {
 func execGowitness(siteURL string) error {
 	// TODO: validate url
 
-	cmd := exec.Command("gowitness", "single", "--fullpage", siteURL)
-	err := cmd.Run()
+	// gopath := os.Getenv("GOPATH")
+	// if gopath == "" {
+	// 	log.Fatal("Error: $GOPATH is not set")
+	// }
+
+	// log.Println(gopath)
+
+	gowitness := "gowitness"
+	output, err := exec.Command(gowitness, "single", "--fullpage", siteURL).Output()
 	if err != nil {
 		return err
 	}
+
+	log.Println(output)
 
 	return nil
 }
@@ -113,8 +122,7 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 		return "", err
 	}
 
-	maxHeight := img.Bounds().Dy()
-	fmt.Println(maxHeight)
+	// maxHeight := img.Bounds().Dy()
 
 	// Values for contribution graph
 	// Create a new RGBA image with the calculated dimensions
