@@ -47,22 +47,17 @@ func githubUrlStringToFilename(str string) string {
 }
 
 func execGowitness(siteURL string) error {
-	// TODO: validate url
+	gowitness := "/go/bin/gowitness"
+	// gowitness := "gowitness"
 
-	// gopath := os.Getenv("GOPATH")
-	// if gopath == "" {
-	// 	log.Fatal("Error: $GOPATH is not set")
-	// }
-
-	// log.Println(gopath)
-
-	gowitness := "gowitness"
-	output, err := exec.Command(gowitness, "single", "--fullpage", siteURL).Output()
+	cmd := exec.Command(gowitness, "single", "--fullpage", siteURL)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println("Error executing command:", err)
 		return err
 	}
 
-	log.Println(output)
+	log.Println("Executing gowitness: " + string(output))
 
 	return nil
 }
