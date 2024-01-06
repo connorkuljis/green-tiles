@@ -49,11 +49,13 @@ func githubUrlStringToFilename(str string) string {
 func execGowitness(siteURL string) error {
 	gowitness := "/go/bin/gowitness"
 	// gowitness := "gowitness"
+	path := os.Getenv("PATH")
+	log.Println("PATH=", path)
 
 	cmd := exec.Command(gowitness, "single", "--fullpage", siteURL)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Println("Error executing command:", err)
+		log.Println("Error, unable to take screenshot with gowitness, reason:", err)
 		return err
 	}
 
@@ -76,12 +78,12 @@ type Screenshot struct {
 func TakeScreenshot(username string, option int, userYOffset int) (string, error) {
 	var inY int
 	switch option {
-	case Triple:
-		inY = 1270
-	case Double:
-		inY = 970
 	case Single:
-		inY = 700
+		inY = 310
+	case Double:
+		inY = 430
+	case Triple:
+		inY = 600
 	case Custom:
 		inY = userYOffset
 	}
@@ -103,7 +105,8 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 	}
 
 	// Open the resulting PNG image
-	file, err := os.Open(filepath.Join(s.Directory, s.Filename))
+	resultImg := filepath.Join(s.Directory, s.Filename)
+	file, err := os.Open(resultImg)
 	if err != nil {
 		log.Println(err)
 		return "", errors.New("Error opening file.")
@@ -122,12 +125,12 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 	// Values for contribution graph
 	// Create a new RGBA image with the calculated dimensions
 	padding := 40
-	contributionGraphWidth := 1800 + padding
-	contributionGraphHeight := 425 + padding
+	contributionGraphWidth := 750 + padding
+	contributionGraphHeight := 200 + padding
 	croppedImage := image.NewRGBA(image.Rect(0, 0, contributionGraphWidth, contributionGraphHeight))
 
 	// Draw into the contribution graph image based on offset
-	xOffset := 860 - padding/2
+	xOffset := 425 - padding/2
 	yOffset := inY - padding/2
 	draw.Draw(croppedImage, croppedImage.Bounds(), img, image.Point{xOffset, yOffset}, draw.Over)
 
