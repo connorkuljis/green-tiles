@@ -49,8 +49,6 @@ func githubUrlStringToFilename(str string) string {
 func execGowitness(siteURL string) error {
 	gowitness := "/go/bin/gowitness"
 	// gowitness := "gowitness"
-	path := os.Getenv("PATH")
-	log.Println("PATH=", path)
 
 	cmd := exec.Command(gowitness, "single", "--fullpage", siteURL)
 	output, err := cmd.CombinedOutput()
@@ -79,9 +77,9 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 	var inY int
 	switch option {
 	case Single:
-		inY = 310
+		inY = 600 - 120 - 120
 	case Double:
-		inY = 430
+		inY = 600 - 120
 	case Triple:
 		inY = 600
 	case Custom:
@@ -130,7 +128,7 @@ func TakeScreenshot(username string, option int, userYOffset int) (string, error
 	croppedImage := image.NewRGBA(image.Rect(0, 0, contributionGraphWidth, contributionGraphHeight))
 
 	// Draw into the contribution graph image based on offset
-	xOffset := 425 - padding/2
+	xOffset := 430 - padding/2
 	yOffset := inY - padding/2
 	draw.Draw(croppedImage, croppedImage.Bounds(), img, image.Point{xOffset, yOffset}, draw.Over)
 

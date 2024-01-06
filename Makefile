@@ -7,7 +7,9 @@ run:
 clean:
 	rm ./main
 
+all: build run
+
 dev:
-	reflex -s make
+	reflex -s make all
 
 

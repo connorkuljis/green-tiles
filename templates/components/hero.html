@@ -1,7 +1,7 @@
 {{ define "hero" }}
 <div>
 
-	<section class="util-section hero-section">
+	<section class="hero-section">
 
 		<div class="util-container">
 
@@ -31,54 +31,65 @@
 
 				<div class="options">
 
-					<label>
-
-						<input type="radio" name="option" value="0" {{ if eq .Option "0" }} checked {{ end }}>
-
-						Single <p>(700px from the top of the page)</p>
-
-					</label>
-
-					<label>
-
-						<input type="radio" name="option" value="1" {{ if eq .Option "1" }} checked {{ end }}>
-
-						Double <p>(970px from the top of the page)</p>
-
-					</label>
-
-					<label>
-
-						<input type="radio" name="option" value="2" {{ if eq .Option "2" }} checked {{ end }}>
-
-						Triple <p>(1270px from the top of the page)</p>
-
-					</label>
-
-					<div>
+					<div class="card">
 
 						<label>
 
-							<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
+							<input type="radio" name="option" value="0" {{ if eq .Option "0" }} checked {{ end }}>
 
-							Custom (if you have a bio)
+							Single <p>(700px from the top of the page)</p>
 
 						</label>
 
-						<details>
+					</div>
 
-							<summary>Custom Offset Amount</summary>
+					<div class="card">
 
-							<input type="number" name="offset" value="{{ .Offset }}">
+						<label>
 
-						</details>
+							<input type="radio" name="option" value="1" {{ if eq .Option "1" }} checked {{ end }}>
+
+							Double <p>(970px from the top of the page)</p>
+
+						</label>
+
+					</div>
+
+					<div class="card">
+
+						<label>
+
+							<input type="radio" name="option" value="2" {{ if eq .Option "2" }} checked {{ end }}>
+
+							Triple <p>(1270px from the top of the page)</p>
+
+						</label>
 
 					</div>
 
 				</div>
 
-
 			</fieldset>
+
+			<div class="card">
+
+				<label>
+
+					<input type="radio" name="option" value="3" {{ if eq .Option "3" }} checked {{ end }}>
+
+					Custom (if you have a bio)
+
+				</label>
+
+				<details>
+
+					<summary>Custom Offset Amount</summary>
+
+					<input type="number" name="offset" value="{{ .Offset }}">
+
+				</details>
+
+			</div>
 
 			<div>
 
@@ -122,7 +133,7 @@
 	}
 
 	this .hero-section {
-
+		min-height: 100dvh;
 		position: relative;
 		display: flex;
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
@@ -145,6 +156,14 @@
 	this .options {
 		display: flex;
 		justify-content: space-between;
+	}
+
+	this .card {
+		padding: 1rem;
+		background-color: white;
+		border: 1px solid black;
+		border-radius: 1rem;
+
 	}
 
 	this .fieldset {
