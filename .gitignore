@@ -3,3 +3,6 @@ main
 .DS_Store
 
 gowitness.sqlite3
+
+screenshots
+/screenshots

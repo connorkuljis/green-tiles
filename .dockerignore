@@ -1,0 +1,7 @@
+# flyctl launch added from .gitignore
+**/main
+
+**/.DS_Store
+
+**/gowitness.sqlite3
+fly.toml
