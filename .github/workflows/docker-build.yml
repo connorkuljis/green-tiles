@@ -1,0 +1,24 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile  # Replace with the path to your Dockerfile
+        push: true
+        # tags: |
+        #   your-docker-hub-username/your-repo-name:latest
+        #   your-docker-hub-username/your-repo-name:${{ github.sha }}
