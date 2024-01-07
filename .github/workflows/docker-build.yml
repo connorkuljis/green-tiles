@@ -22,3 +22,6 @@ jobs:
         # tags: |
         #   your-docker-hub-username/your-repo-name:latest
         #   your-docker-hub-username/your-repo-name:${{ github.sha }}
+        tags: |
+          connorkuljis/green-tiles:latest
+          connorkuljis/green-tiles:${{ github.sha }}
